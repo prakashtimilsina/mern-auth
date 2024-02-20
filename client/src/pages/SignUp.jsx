@@ -1,5 +1,7 @@
 import React, {useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
+import OAuth from "../components/OAuth";
+import axios from "axios";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({});
@@ -19,21 +21,21 @@ const SignUp = () => {
   try {
     setLoading(true);
     setErrorMessage(null);
-    const res = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body:JSON.stringify(formData)
-    });
-    const data = await res.json();
-    if (data.success === false){
-      setLoading(false);
-      return setErrorMessage(data.message)
-    }
-    setLoading(false);
-    if(res.ok){
-      navigate('/sign-in')
-    }
+    // const res = await fetch('/api/auth/signup', {
+    //   method: 'POST',
+    //   headers: {'Content-Type':'application/json'},
+    //   body:JSON.stringify(formData)
+    // });
+    // const data = await res.json();
     
+    // if (data.success === false){
+    //   setLoading(false);
+    //   return setErrorMessage(data.message)
+    // }
+    const response = await axios.post('/api/auth/signup', formData);
+    // console.log('Response', response.data)
+    setLoading(false);
+    navigate('/sign-in')    
   } catch (error) {
     setErrorMessage(error.message)
     setLoading(false);
@@ -68,6 +70,7 @@ const SignUp = () => {
         <button disabled={loading} className="bg-slate-800 text-white p-3 rounded-lg uppercase hover:opacity-90 disabled:opacity-60">
           {loading ? 'Loading...': 'Sign Up'}
         </button>
+        <OAuth />
       </form>
       <div className="flex gap-4 mt-5">
         <p>Have an account?</p>
